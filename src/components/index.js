@@ -1,6 +1,3 @@
-/**
- * Created by chenbin on 2017/3/3.
- */
 import React from 'react';
 import Test from './test';
 import Countdown from './Countdown';
