@@ -150,7 +150,7 @@ module.exports={
         }),
     ],
     devServer:{
-        port: 8080,
+        port: 8000,
         contentBase: './dist/index.html',
         historyApiFallback: true,
         host: '0.0.0.0'

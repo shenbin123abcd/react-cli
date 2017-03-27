@@ -1,12 +1,13 @@
 import React from 'react';
 import Tabs from './Tabs';
+import Tabs2 from './Tabs2';
 
 export default class App extends React.Component{
     handleClick(){
         alert(1)
     }
     render(){
-        const settings={
+        const settings1={
             Tab:[
                 `<div>tab1</div>`,
                 `<div>tab2</div>`,
@@ -22,7 +23,19 @@ export default class App extends React.Component{
         }
         return(
             <div className="container" style={{width:'90%',margin:'auto'}}>
-                <Tabs {...settings}/>
+                <Tabs {...settings1}>
+                    <div></div>
+                </Tabs>
+
+                <div style={{width:'80%',margin:'30px auto 0 auto'}}>
+                    <Tabs2>
+                        <div data-title="标题1">1</div>
+                        <div data-title="标题2">2</div>
+                        <div data-title="标题3">3</div>
+                        <div data-title="标题4">4</div>
+                    </Tabs2>
+                </div>
+
             </div>
         )
     }

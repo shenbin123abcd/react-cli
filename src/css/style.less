@@ -24,3 +24,31 @@ body{
     }
   }
 }
+
+
+.tabs-container-block{
+  width:100%;
+  display:block;
+  overflow: hidden;
+  .tabs-title-wrapper{
+    display:flex;
+  }
+  .tabs-pane-wrapper{
+    display:flex;
+    transition:all .3s ease-in-out;
+    .tabs-pane{
+      &:nth-child(1){
+        background: red;
+      }
+      &:nth-child(2){
+        background: pink;
+      }
+      &:nth-child(3){
+        background: yellow;
+      }
+      &:nth-child(4){
+        background: blue;
+      }
+    }
+  }
+}
