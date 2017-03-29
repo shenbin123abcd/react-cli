@@ -6,6 +6,7 @@ import React from 'react';
 
 var prevIndex=0;
 var x=0;
+
 class Tab extends React.PureComponent{
     constructor(){
         super();
@@ -20,7 +21,7 @@ class Tab extends React.PureComponent{
             'textAlign': 'center',
         }
         return(
-            <div className="tab-wrapper" style={{display:'flex',width:'100%'}}>
+            <div className="tab-wrapper">
                 {
                     Tab.map((n,i)=>{
                         return(

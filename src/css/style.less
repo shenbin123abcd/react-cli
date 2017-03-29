@@ -32,6 +32,35 @@ body{
   overflow: hidden;
   .tabs-title-wrapper{
     display:flex;
+    position: relative;
+    .tabs-title-inner{
+      width:100%;
+      display: flex;
+    }
+    &:before{
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      left:0;
+      display: block;
+      width: 20%;
+      height: 100%;
+      //content: " ";
+      z-index: 1000;
+      background: -webkit-gradient(linear,0 0,100% 0,from(#fff),to(hsla(0,0%,100%,0)));
+    }
+    &:after{
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      right:0;
+      display: block;
+      width: 20%;
+      height: 100%;
+      //content: " ";
+      z-index: 1000;
+      background: -webkit-gradient(linear,0 0,100% 0,from(hsla(0,0%,100%,0)),to(#fff));
+    }
   }
   .tabs-pane-wrapper{
     display:flex;
