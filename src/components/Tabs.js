@@ -1,116 +1,159 @@
 /**
- * Created by shenbin on 2017-03-26.
+ * Created by shenbin on 2017/3/27.
  */
 import React from 'react';
 
-
+var tabNum=0;
 var prevIndex=0;
-var x=0;
-
-class Tab extends React.PureComponent{
-    constructor(){
-        super();
-    }
-    handleClick(index){
-        this.props.selectIndex(index)
-    }
-    render(){
-        const { Tab }=this.props;
-        const itemStyle={
-            'flex':Tab.length<=5 ? `0 0 ${100/Tab.length}%` : '0 0 20%',
-            'textAlign': 'center',
-        }
-        return(
-            <div className="tab-wrapper">
-                {
-                    Tab.map((n,i)=>{
-                        return(
-                            <div dangerouslySetInnerHTML={{__html:n}} key={i} style={itemStyle} onClick={this.handleClick.bind(this,i)}></div>
-                        )
-                    })
-                }
-            </div>
-        )
-    }
-}
+var x='';
 
 class TabPane extends React.PureComponent{
-    constructor(){
-        super()
-    }
     render(){
-        const { TabPane,wrapperWidth,selectIndex }=this.props;
-        const singleWidth=Number(wrapperWidth/TabPane.length);
-        const styleWidth={
-            width:wrapperWidth ? `${wrapperWidth}px` : '100%',
-            display:'flex',
-            transition:`all ease-in-out .3s`,
-            WebkitTransition:`all ease-in-out .3s`,
-            transform:(()=>{
-                if(selectIndex>prevIndex){
-                    let num=Number(selectIndex-prevIndex);
-                    x+=-(singleWidth*num)
-                }else{
-                    let num=Number(prevIndex-selectIndex);
-                    x+=(singleWidth*num)
-                }
-                prevIndex=selectIndex;
-                return `translate3d(${x}px,0,0)`
-            })()
-        }
-        const styleItem={
-            flex:wrapperWidth ? `0 0 ${singleWidth}px` : `0 0 100%`,
-        }
+        const { children }=this.props;
         return(
-            <div className="tabPane-wrapper" style={styleWidth}>
-                {
-                    TabPane.map((n,i)=>{
-                        return(
-                            <div dangerouslySetInnerHTML={{__html:n}} key={i} className="tabPane-item" style={styleItem}></div>
-                        )
-                    })
+            <div>{children}</div>
+        )
+    }
+}
+
+class Tab extends React.PureComponent{
+    handleClick(index){
+        this.props.selectIndex(index);
+    };
+    render(){
+        const { title,num,index,html }=this.props;
+        const cls=()=>{
+            if(html){
+                return{
+                    'flex':html.length<=5 ? `0 0 ${100/html.length}%` : '0 0 20%',
+                    'textAlign': 'center',
                 }
+            }else{
+                return null;
+            }
+        };
+        const cls2=()=>{
+            if(html){
+                return{
+                    width:'100%',
+                    display:'block'
+                }
+            }else{
+                return{
+                    'flex':Tab.length<=5 ? `0 0 ${100/num}%` : '0 0 20%',
+                    'textAlign': 'center',
+                }
+            }
+        };
+        const renderFun=()=>{
+            if(html){
+                return(
+                    <div className="tabs-title-inner" style={{width:'100%',display:'flex'}}>
+                        {
+                            html.map((n,i)=>{
+                                return(
+                                    <div dangerouslySetInnerHTML={{__html:n}} key={i} className="tabs-title" style={cls()} onClick={this.handleClick.bind(this,i)}></div>
+                                )
+                            })
+                        }
+                    </div>
+                )
+            }else{
+                return(
+                    <div className="tabs-title" style={cls()} onClick={this.handleClick.bind(this,index)}>
+                        {title}
+                    </div>
+                )
+            }
+        };
+        return(
+            <div style={cls2()}>
+                {renderFun()}
             </div>
         )
     }
 }
 
-
 export default class Tabs extends React.PureComponent{
-    constructor(props){
-        super(props);
+    constructor(){
+        super()
         this.state={
-            data:props || null,
             wrapperWidth:null,
             selectIndex:0,
         }
     }
+    static TabPane=TabPane;
     componentDidMount(){
-        const EL=document.querySelector('.tabs-container');
-        if(EL){
-            const length=this.state.data.TabPane.length
+        const el=document.querySelector('.tabs-container-block');
+        if(el){
+            //console.log(el.parentNode.offsetWidth*tabNum)
             this.setState({
-                wrapperWidth: EL.parentNode.offsetWidth*length
+                wrapperWidth: el.parentNode.offsetWidth*tabNum,
             })
         }
-    }
-    selectIndex(selectIndex){
+    };
+    selectIndex(index){
+        if(index!==prevIndex){
+            this.props.selectFunc && this.props.selectFunc();
+        }
         this.setState({
-            selectIndex
+            selectIndex:index
         })
-    }
+    };
     render(){
-        const renderPage=this.state.data
-            ?
-                <div className="tabs-container" style={{width:'100%',overflow:'hidden'}}>
-                    <Tab {...this.state.data} selectIndex={this.selectIndex.bind(this)}/>
-                    <TabPane {...this.state.data} wrapperWidth={this.state.wrapperWidth} selectIndex={this.state.selectIndex}/>
-                </div>
-            :
-                <div>loading...</div>;
+        const{ wrapperWidth,selectIndex }=this.state;
+        const{ children,tabs }=this.props;
+        if(tabs) tabNum=tabs.length;
+        const singleWidth=Number(wrapperWidth/tabNum);
+        const paneWrapperStyle={
+            width: wrapperWidth ? `${wrapperWidth}px` : '100%',
+            transform:(()=>{
+                if(selectIndex>prevIndex){
+                    let num=Number(selectIndex-prevIndex);
+                    x-=(singleWidth*num)
+                }else if(selectIndex<prevIndex){
+                    let num=Number(prevIndex-selectIndex);
+                    x+=(singleWidth*num)
+                }else{
+                    x=0;
+                }
+                prevIndex=selectIndex;
+                return `translate3d(${x}px,0,0)`
+            })()
+        };
+        const paneItemWidth={
+            width:singleWidth ? `${singleWidth}px` : '100%',
+            flex:singleWidth ? `0 0 ${singleWidth}px` : '100%',
+        }
         return(
-            <div style={{width:'100%'}}>
-                {renderPage}
+            <div className="tabs-container-block">
+                {
+                    this.props.tabs
+                        ?
+                            <Tab html={tabs} selectIndex={this.selectIndex.bind(this)}/>
+                        :
+                            <div className="tabs-title-inner">
+                                {
+                                    React.Children.map(children,(child,index)=>{
+                                        tabNum=children.length;
+                                        return(
+                                            <Tab title={child.props['data-title']} num={this.props.children.length} index={index} selectIndex={this.selectIndex.bind(this)}/>
+                                        )
+                                    })
+                                }
+                            </div>
+                }
+                <div className="tabs-pane-wrapper" style={paneWrapperStyle}>
+                    {
+                        React.Children.map(children,(child)=>{
+                            return (
+                                <div className="tabs-pane" style={paneItemWidth} >
+                                    {child}
+                                </div>
+                            );
+                        })
+                    }
+                </div>
             </div>
         )
     }
